@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Smart Electricity Bill Predictor</title>
+
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:Arial,sans-serif;}
+body{background:#eef3fb;}
+.header{
+background:#0b3d91;
+color:white;
+text-align:center;
+padding:20px;
+}
+.logo{
+width:90px;
+height:90px;
+background:white;
+border-radius:50%;
+padding:5px;
+margin-bottom:10px;
+}
+.header h1{font-size:30px;}
+.header h2{font-size:22px;}
+.header p{font-size:16px;}
+#loginPage{
+display:flex;
+justify-content:center;
+align-items:center;
+height:70vh;
+}
+.login-box{
+background:white;
+padding:30px;
+width:330px;
+border-radius:12px;
+box-shadow:0 4px 12px gray;
+text-align:center;
+}
+.login-box input{
+width:100%;
+padding:12px;
+margin:15px 0;
+font-size:16px;
+}
+.login-box button{
+width:100%;
+padding:12px;
+background:#0b3d91;
+color:white;
+border:none;
+font-size:16px;
+cursor:pointer;
+}
+#msg{color:red;margin-top:10px;}
+#mainPage{display:none;padding:20px;}
+.card{
+background:white;
+padding:20px;
+border-radius:10px;
+box-shadow:0 2px 8px #ccc;
+margin-bottom:20px;
+}
+.card h2{color:#0b3d91;margin-bottom:15px;}
+input[type=text],input[type=number]{
+padding:10px;
+width:48%;
+margin:5px 0;
+}
+.btn{
+padding:10px 20px;
+background:#0b3d91;
+color:white;
+border:none;
+cursor:pointer;
+margin-top:10px;
+}
+table{
+width:100%;
+border-collapse:collapse;
+margin-top:10px;
+}
+table th{
+background:#0b3d91;
+color:white;
+padding:10px;
+}
+table td{
+border:1px solid #ccc;
+padding:10px;
+text-align:center;
+}
+#result{
+background:#e8f1ff;
+padding:15px;
+margin-top:15px;
+border-radius:8px;
+}
+.footer{
+background:#0b3d91;
+color:white;
+text-align:center;
+padding:15px;
+margin-top:20px;
+}
+</style>
+</head>
+
+<body>
+
+<div class="header">
+<img src="logo.png" class="logo">
+<h1>Sharnbasava University</h1>
+<h2>Faculty of Engineering & Technology</h2>
+<p>Kalaburagi, Karnataka</p>
+<h2>Smart Electricity Bill Predictor</h2>
+</div>
+
+<div id="loginPage">
+<div class="login-box">
+<h2>Project Login</h2>
+<input type="password" id="password" placeholder="Enter Password">
+<button onclick="login()">Open Project</button>
+<p id="msg"></p>
+</div>
+</div>
+
+<div id="mainPage">
+
+<div class="card">
+<h2>Add Monthly Record</h2>
+
+<input type="text" id="month" placeholder="Enter Month">
+<input type="number" id="units" placeholder="Enter Units">
+<br>
+
+<button class="btn" onclick="addRecord()">Add Record</button>
+
+</div>
+
+<div class="card">
+<h2>Bill History</h2>
+
+<table>
+
+<thead>
+<tr>
+<th>Month</th>
+<th>Units</th>
+<th>Bill (Rs.)</th>
+</tr>
+</thead>
+
+<tbody id="history">
+</tbody>
+
+</table>
+
+</div>
+
+<div class="card">
+<h2>Predict Next Month Bill</h2>
+
+<button class="btn" onclick="predictBill()">
+Predict Bill
+</button>
+
+<div id="result">
+Enter at least 3 records.
+</div>
+
+</div>
+
+<div class="card">
+<h2>Project Details</h2>
+
+<p><b>Team:</b> Tech Titans</p>
+<p><b>Members:</b> Harish Biradar</p>
+<p><b>Technology:</b> HTML, CSS, JavaScript</p>
+<p><b>Course:</b> B.Tech CSE 3rd Semester</p>
+
+</div>
+
+</div>
+
+<div class="footer">
+Smart Electricity Bill Predictor © 2026
+</div>
+
+<script>
+
+const PASSWORD="CSE2026";
+
+let records=[];
+
+function login(){
+
+let p=document.getElementById("password").value;
+
+if(p===PASSWORD){
+
+document.getElementById("loginPage").style.display="none";
+
+document.getElementById("mainPage").style.display="block";
+
+}else{
+
+document.getElementById("msg").innerHTML="Wrong Password";
+
+}
+
+}
+
+function calculateBill(units){
+
+if(units<=100)
+return units*3;
+
+else if(units<=200)
+return 300+(units-100)*5;
+
+else
+return 800+(units-200)*7;
+
+}
+
+function addRecord(){
+
+let month=document.getElementById("month").value.trim();
+
+let units=parseInt(document.getElementById("units").value);
+
+if(month==""||isNaN(units)){
+
+alert("Enter month and units");
+
+return;
+
+}
+
+let bill=calculateBill(units);
+
+records.push({month,units,bill});
+
+let table=document.getElementById("history");
+
+let row=table.insertRow();
+
+row.insertCell(0).innerHTML=month;
+
+row.insertCell(1).innerHTML=units;
+
+row.insertCell(2).innerHTML="Rs. "+bill.toFixed(2);
+
+document.getElementById("month").value="";
+
+document.getElementById("units").value="";
+
+}
+
+function predictBill(){
+
+if(records.length<3){
+
+document.getElementById("result").innerHTML=
+"Enter at least 3 records.";
+
+return;
+
+}
+
+let n=records.length;
+
+let avg=Math.floor(
+(records[n-1].units+
+records[n-2].units+
+records[n-3].units)/3
+);
+
+let bill=calculateBill(avg);
+
+let tip="Excellent! Your usage is low.";
+
+if(avg>200)
+tip="Reduce AC and heater usage.";
+
+else if(avg>100)
+tip="Use LED bulbs to save energy.";
+
+document.getElementById("result").innerHTML=
+"<h3>Prediction Result</h3>"+
+"<p><b>Predicted Units:</b> "+avg+"</p>"+
+"<p><b>Estimated Bill:</b> Rs. "+bill.toFixed(2)+"</p>"+
+"<p><b>Suggestion:</b> "+tip+"</p>";
+
+}
+
+</script>
+
+</body>
+</html>
