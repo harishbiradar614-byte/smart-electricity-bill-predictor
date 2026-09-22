@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Smart Electricity Bill Predictor</title>
+  <style>
+    body{font-family:Arial,sans-serif;background:#f4f4f4;margin:0;padding:20px}
+    .card{max-width:700px;margin:auto;background:#fff;padding:20px;border-radius:10px;box-shadow:0 2px 8px rgba(0,0,0,.2)}
+    h1{color:#0d47a1;text-align:center}
+    input,button{padding:10px;margin:6px;width:calc(50% - 18px)}
+    button{background:#0d47a1;color:#fff;border:none;cursor:pointer}
+    table{width:100%;border-collapse:collapse;margin-top:15px}
+    th,td{border:1px solid #ccc;padding:8px;text-align:center}
+    th{background:#0d47a1;color:#fff}
+    #result{margin-top:15px;font-weight:bold;color:#0d47a1}
+  </style>
+</head>
+<body>
+<div class="card">
+  <h1>Smart Electricity Bill Predictor</h1>
+
+  <input id="month" type="text" placeholder="Enter Month">
+  <input id="units" type="number" placeholder="Enter Units">
+  <br>
+  <button onclick="addRecord()">Add Record</button>
+  <button onclick="predictBill()">Predict Bill</button>
+
+  <table>
+    <thead>
+      <tr><th>Month</th><th>Units</th><th>Bill</th></tr>
+    </thead>
+    <tbody id="history"></tbody>
+  </table>
+
+  <div id="result">Enter at least 3 records</div>
+</div>
+
+<script>
+let records=[];
+
+function calculateBill(u){
+  if(u<=100) return u*3;
+  if(u<=200) return 300+(u-100)*5;
+  return 800+(u-200)*7;
+}
+
+function addRecord(){
+  const month=document.getElementById('month').value.trim();
+  const units=parseInt(document.getElementById('units').value);
+  if(month===''||isNaN(units)){ alert('Enter month and units'); return; }
+
+  const bill=calculateBill(units);
+  records.push({month,units,bill});
+
+  const row=document.getElementById('history').insertRow();
+  row.insertCell(0).innerText=month;
+  row.insertCell(1).innerText=units;
+  row.insertCell(2).innerText='Rs. '+bill.toFixed(2);
+
+  document.getElementById('month').value='';
+  document.getElementById('units').value='';
+}
+
+function predictBill(){
+  if(records.length<3){
+    document.getElementById('result').innerHTML='Enter at least 3 records';
+    return;
+  }
+
+  const n=records.length;
+  const avg=Math.floor((records[n-1].units+records[n-2].units+records[n-3].units)/3);
+  const bill=calculateBill(avg);
+
+  document.getElementById('result').innerHTML=
+    'Predicted Units: '+avg+'<br>Estimated Bill: Rs. '+bill.toFixed(2);
+}
+</script>
+</body>
+</html>
