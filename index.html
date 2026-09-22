@@ -1,247 +1,168 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
+
 <head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
     <title>Smart Electricity Bill Predictor</title>
 
+
     <style>
-        body {
-            font-family: Arial;
-            background: #f2f2f2;
-            padding: 20px;
+
+        * {
+            box-sizing: border-box;
         }
 
-        .box {
-            max-width: 700px;
-            margin: auto;
+
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, Helvetica, sans-serif;
+            background: #eef2f7;
+            color: #222;
+        }
+
+
+        .header {
+            background: #1e3a8a;
+            color: white;
+            text-align: center;
+            padding: 30px 15px;
+        }
+
+
+        .header h1 {
+            margin: 0;
+            font-size: 32px;
+        }
+
+
+        .header p {
+            margin-top: 10px;
+            font-size: 17px;
+        }
+
+
+        .container {
+            width: 92%;
+            max-width: 1000px;
+            margin: 25px auto;
+        }
+
+
+        .card {
             background: white;
             padding: 25px;
-            border-radius: 10px;
+            margin-bottom: 25px;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.12);
         }
+
+
+        .card h2 {
+            color: #1e3a8a;
+            margin-top: 0;
+        }
+
+
+        .input-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
 
         input {
-            padding: 12px;
-            margin: 5px;
-            width: 40%;
+            flex: 1;
+            min-width: 200px;
+            padding: 13px;
+            border: 1px solid #aaa;
+            border-radius: 6px;
+            font-size: 16px;
         }
 
+
         button {
-            padding: 12px 20px;
-            margin: 5px;
-            background: blue;
-            color: white;
+            padding: 13px 22px;
             border: none;
-            border-radius: 5px;
+            border-radius: 6px;
+            background: #1e3a8a;
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
         }
+
+
+        button:hover {
+            background: #142b68;
+        }
+
+
+        .danger {
+            background: #dc2626;
+            margin-top: 15px;
+        }
+
+
+        .success {
+            background: #15803d;
+        }
+
 
         table {
             width: 100%;
-            margin-top: 20px;
             border-collapse: collapse;
+            margin-top: 20px;
         }
 
-        th, td {
-            border: 1px solid black;
-            padding: 10px;
+
+        th {
+            background: #1e3a8a;
+            color: white;
+        }
+
+
+        th,
+        td {
+            border: 1px solid #ddd;
+            padding: 13px;
             text-align: center;
         }
 
-        th {
-            background: blue;
-            color: white;
+
+        tr:nth-child(even) {
+            background: #f8fafc;
         }
-    </style>
-</head>
 
-<body>
 
-<div class="box">
+        .no-records {
+            text-align: center;
+            color: #777;
+        }
 
-    <h1>Smart Electricity Bill Predictor</h1>
 
-    <h2>Add Monthly Record</h2>
+        .prediction-box {
+            background: #eff6ff;
+            border-left: 5px solid #1e3a8a;
+            padding: 20px;
+            margin-top: 20px;
+            border-radius: 6px;
+            line-height: 1.8;
+        }
 
-    <input type="text" id="month" placeholder="Enter Month">
 
-    <input type="number" id="units" placeholder="Units Consumed">
+        .prediction-value {
+            font-size: 25px;
+            font-weight: bold;
+            color: #1e3a8a;
+        }
 
-    <button id="addButton">Add Record</button>
 
-
-    <h2>Bill History</h2>
-
-    <table>
-
-        <tr>
-            <th>Month</th>
-            <th>Units</th>
-            <th>Bill</th>
-        </tr>
-
-        <tbody id="billHistory">
-        </tbody>
-
-    </table>
-
-
-    <h2>Prediction</h2>
-
-    <button id="predictButton">
-        Predict Next Month Bill
-    </button>
-
-    <p id="prediction">
-        Enter at least 3 months of data.
-    </p>
-
-</div>
-
-
-<script>
-
-let records = [];
-
-
-/* Calculate Bill */
-
-function calculateBill(units) {
-
-    if (units <= 100) {
-
-        return units * 3;
-
-    }
-
-    else if (units <= 200) {
-
-        return (100 * 3) +
-               (units - 100) * 5;
-
-    }
-
-    else {
-
-        return (100 * 3) +
-               (100 * 5) +
-               (units - 200) * 7;
-
-    }
-
-}
-
-
-/* Add Record */
-
-document.getElementById("addButton").onclick = function() {
-
-    let month =
-        document.getElementById("month").value;
-
-    let units =
-        document.getElementById("units").value;
-
-
-    if (month == "" || units == "") {
-
-        alert("Please enter month and units.");
-
-        return;
-
-    }
-
-
-    units = Number(units);
-
-
-    let bill =
-        calculateBill(units);
-
-
-    records.push({
-
-        month: month,
-
-        units: units,
-
-        bill: bill
-
-    });
-
-
-    let table =
-        document.getElementById("billHistory");
-
-
-    let row =
-        table.insertRow();
-
-
-    let cell1 =
-        row.insertCell(0);
-
-    let cell2 =
-        row.insertCell(1);
-
-    let cell3 =
-        row.insertCell(2);
-
-
-    cell1.innerHTML = month;
-
-    cell2.innerHTML = units;
-
-    cell3.innerHTML =
-        "Rs. " + bill.toFixed(2);
-
-
-    document.getElementById("month").value = "";
-
-    document.getElementById("units").value = "";
-
-};
-
-
-/* Predict Bill */
-
-document.getElementById("predictButton").onclick = function() {
-
-    if (records.length < 3) {
-
-        document.getElementById("prediction").innerHTML =
-            "Enter at least 3 months of data.";
-
-        return;
-
-    }
-
-
-    let n = records.length;
-
-
-    let average =
-        Math.floor(
-            (
-                records[n - 1].units +
-                records[n - 2].units +
-                records[n - 3].units
-            ) / 3
-        );
-
-
-    let bill =
-        calculateBill(average);
-
-
-    document.getElementById("prediction").innerHTML =
-
-        "<b>Predicted Units:</b> " +
-        average +
-
-        "<br><b>Estimated Bill:</b> Rs. " +
-        bill.toFixed(2);
-
-};
-
-</script>
-
-</body>
-</html> 
+        .info {
+            background: #f8fafc;
+            padding: 15px;
+            border-radius
