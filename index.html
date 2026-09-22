@@ -1,168 +1,146 @@
 <!DOCTYPE html>
-<html lang="en">
-
+<html>
 <head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Smart Electricity Bill Predictor</title>
 
-    <meta charset="UTF-8">
+<style>
+body{
+font-family:Arial;
+background:#f2f2f2;
+padding:20px;
+}
+.box{
+max-width:700px;
+margin:auto;
+background:#fff;
+padding:20px;
+border-radius:10px;
+}
+input,button{
+padding:10px;
+margin:5px;
+width:45%;
+}
+button{
+background:#0D47A1;
+color:white;
+border:none;
+cursor:pointer;
+}
+table{
+width:100%;
+border-collapse:collapse;
+margin-top:15px;
+}
+th,td{
+border:1px solid #ccc;
+padding:10px;
+text-align:center;
+}
+th{
+background:#0D47A1;
+color:white;
+}
+</style>
+</head>
 
-    <meta name="viewport"
-          content="width=device-width, initial-scale=1.0">
+<body>
 
-    <title>Smart Electricity Bill Predictor</title>
+<div class="box">
 
+<h2>Smart Electricity Bill Predictor</h2>
 
-    <style>
+<input id="month" type="text" placeholder="Enter Month">
+<input id="units" type="number" placeholder="Units">
 
-        * {
-            box-sizing: border-box;
-        }
+<button onclick="addRecord()">Add Record</button>
 
+<h3>Bill History</h3>
 
-        body {
-            margin: 0;
-            padding: 0;
-            font-family: Arial, Helvetica, sans-serif;
-            background: #eef2f7;
-            color: #222;
-        }
+<table>
+<thead>
+<tr>
+<th>Month</th>
+<th>Units</th>
+<th>Bill</th>
+</tr>
+</thead>
+<tbody id="history"></tbody>
+</table>
 
+<button onclick="predictBill()">Predict Next Month</button>
 
-        .header {
-            background: #1e3a8a;
-            color: white;
-            text-align: center;
-            padding: 30px 15px;
-        }
+<h3 id="result">Enter at least 3 records</h3>
 
+</div>
 
-        .header h1 {
-            margin: 0;
-            font-size: 32px;
-        }
+<script>
+let records=[];
 
+function calculateBill(units){
+if(units<=100)
+return units*3;
+else if(units<=200)
+return 300+(units-100)*5;
+else
+return 800+(units-200)*7;
+}
 
-        .header p {
-            margin-top: 10px;
-            font-size: 17px;
-        }
+function addRecord(){
 
+let month=document.getElementById("month").value;
+let units=parseInt(document.getElementById("units").value);
 
-        .container {
-            width: 92%;
-            max-width: 1000px;
-            margin: 25px auto;
-        }
+if(month==""||isNaN(units)){
+alert("Enter month and units");
+return;
+}
 
+let bill=calculateBill(units);
 
-        .card {
-            background: white;
-            padding: 25px;
-            margin-bottom: 25px;
-            border-radius: 12px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.12);
-        }
+records.push({
+month:month,
+units:units,
+bill:bill
+});
 
+let table=document.getElementById("history");
 
-        .card h2 {
-            color: #1e3a8a;
-            margin-top: 0;
-        }
+let row=table.insertRow();
 
+row.insertCell(0).innerHTML=month;
+row.insertCell(1).innerHTML=units;
+row.insertCell(2).innerHTML="Rs."+bill.toFixed(2);
 
-        .input-group {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 10px;
-        }
+document.getElementById("month").value="";
+document.getElementById("units").value="";
+}
 
+function predictBill(){
 
-        input {
-            flex: 1;
-            min-width: 200px;
-            padding: 13px;
-            border: 1px solid #aaa;
-            border-radius: 6px;
-            font-size: 16px;
-        }
+if(records.length<3){
+document.getElementById("result").innerHTML="Enter at least 3 records";
+return;
+}
 
+let n=records.length;
 
-        button {
-            padding: 13px 22px;
-            border: none;
-            border-radius: 6px;
-            background: #1e3a8a;
-            color: white;
-            font-size: 16px;
-            cursor: pointer;
-        }
+let avg=Math.floor(
+(records[n-1].units+
+records[n-2].units+
+records[n-3].units)/3
+);
 
+let bill=calculateBill(avg);
 
-        button:hover {
-            background: #142b68;
-        }
+document.getElementById("result").innerHTML=
+"Predicted Units : "+avg+
+"<br>Estimated Bill : Rs."+bill.toFixed(2);
 
+}
+</script>
 
-        .danger {
-            background: #dc2626;
-            margin-top: 15px;
-        }
-
-
-        .success {
-            background: #15803d;
-        }
-
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 20px;
-        }
-
-
-        th {
-            background: #1e3a8a;
-            color: white;
-        }
-
-
-        th,
-        td {
-            border: 1px solid #ddd;
-            padding: 13px;
-            text-align: center;
-        }
-
-
-        tr:nth-child(even) {
-            background: #f8fafc;
-        }
-
-
-        .no-records {
-            text-align: center;
-            color: #777;
-        }
-
-
-        .prediction-box {
-            background: #eff6ff;
-            border-left: 5px solid #1e3a8a;
-            padding: 20px;
-            margin-top: 20px;
-            border-radius: 6px;
-            line-height: 1.8;
-        }
-
-
-        .prediction-value {
-            font-size: 25px;
-            font-weight: bold;
-            color: #1e3a8a;
-        }
-
-
-        .info {
-            background: #f8fafc;
-            padding: 15px;
-            border-radius
+</body>
+</html>
