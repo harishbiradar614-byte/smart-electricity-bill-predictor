@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Smart Electricity Bill Predictor</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:Arial,sans-serif}
+body{background:#eef3fb}
+.header{background:#0D47A1;color:#fff;text-align:center;padding:20px}
+.logo{width:100%;max-width:650px;height:auto;background:#fff;padding:8px;border-radius:10px;margin:0 auto 15px;display:block}
+.header h1{font-size:30px}.header h2{margin:5px 0}.header p{font-size:16px}
+#loginPage{display:flex;justify-content:center;align-items:center;height:70vh}
+.login{background:#fff;width:340px;padding:25px;border-radius:12px;box-shadow:0 4px 12px rgba(0,0,0,.2)}
+.login h2{text-align:center;color:#0D47A1;margin-bottom:15px}
+.passbox{display:flex}.passbox input{flex:1;padding:12px;font-size:16px}.eye{width:55px;border:none;background:#0D47A1;color:#fff;font-size:18px;cursor:pointer}.open{width:100%;margin-top:15px;padding:12px;background:#0D47A1;color:#fff;border:none;font-size:16px;cursor:pointer}#msg{color:red;text-align:center;margin-top:10px}#main{display:none;max-width:1000px;margin:auto;padding:20px}.card{background:#fff;padding:20px;border-radius:10px;box-shadow:0 2px 8px #ccc;margin-bottom:20px}.card h2{color:#0D47A1;margin-bottom:15px}.row{display:flex;gap:10px;flex-wrap:wrap}.row input{flex:1;min-width:220px;padding:12px;font-size:16px}.btn{padding:12px 20px;background:#0D47A1;color:#fff;border:none;cursor:pointer;margin-top:10px}table{width:100%;border-collapse:collapse}th,td{border:1px solid #ccc;padding:10px;text-align:center}th{background:#0D47A1;color:#fff}#result{margin-top:15px;background:#E8F1FF;padding:15px;border-radius:8px}.footer{background:#0D47A1;color:#fff;text-align:center;padding:15px}@media(max-width:700px){.logo{max-width:100%}.row input{width:100%}}
+</style>
+</head>
+<body>
+<div class="header">
+<img src="logo.png" class="logo" alt="College Logo">
+<h1>SHARNBASAVA UNIVERSITY</h1>
+<h2>Faculty of Engineering & Technology</h2>
+<p>Kalaburagi, Karnataka</p>
+<h2>SMART ELECTRICITY BILL PREDICTOR</h2>
+</div>
+<div id="loginPage">
+<div class="login">
+<h2>Project Login</h2>
+<div class="passbox">
+<input type="password" id="password" placeholder="Enter Password" onkeydown="enterLogin(event)">
+<button class="eye" onclick="togglePassword()">👁</button>
+</div>
+<button class="open" onclick="login()">Open Project</button>
+<p id="msg"></p>
+</div>
+</div>
+<div id="main">
+<div class="card">
+<h2>Add Monthly Record</h2>
+<div class="row">
+<input type="text" id="month" placeholder="Enter Month" onkeydown="focusUnits(event)">
+<input type="number" id="units" placeholder="Enter Units" onkeydown="enterAdd(event)">
+</div>
+<button class="btn" onclick="addRecord()">Add Record</button>
+</div>
+<div class="card">
+<h2>Bill History</h2>
+<table>
+<thead><tr><th>Month</th><th>Units</th><th>Bill (Rs.)</th></tr></thead>
+<tbody id="history"></tbody>
+</table>
+</div>
+<div class="card">
+<h2>Predict Next Month Bill</h2>
+<button class="btn" onclick="predictBill()">Predict Bill</button>
+<div id="result">Enter at least 3 monthly records.</div>
+</div>
+<div class="card">
+<h2>Project Details</h2>
+<p><b>Project:</b> Smart Electricity Bill Predictor</p>
+<p><b>Department:</b> Computer Science & Engineering</p>
+<p><b>Technology:</b> HTML, CSS & JavaScript</p>
+<p><b>Course:</b> B.Tech CSE 3rd Semester</p>
+</div>
+</div>
+<div class="footer">© 2026 Smart Electricity Bill Predictor</div>
+<script>
+const PASSWORD="CSE2026";let records=[];function togglePassword(){let p=document.getElementById("password");p.type=p.type==="password"?"text":"password"}function enterLogin(e){if(e.key==="Enter"){e.preventDefault();login()}}function login(){let p=document.getElementById("password").value;if(p===PASSWORD){document.getElementById("loginPage").style.display="none";document.getElementById("main").style.display="block"}else{document.getElementById("msg").innerHTML="Wrong Password"}}function calculateBill(u){if(u<=100)return u*3;if(u<=200)return 300+(u-100)*5;return 800+(u-200)*7}function focusUnits(e){if(e.key==="Enter"){e.preventDefault();document.getElementById("units").focus()}}function enterAdd(e){if(e.key==="Enter"){e.preventDefault();addRecord()}}function addRecord(){let m=document.getElementById("month").value.trim();let u=parseInt(document.getElementById("units").value);if(m===""||isNaN(u)){alert("Enter Month and Units");return}let b=calculateBill(u);records.push({month:m,units:u,bill:b});let row=document.getElementById("history").insertRow();row.insertCell(0).innerHTML=m;row.insertCell(1).innerHTML=u;row.insertCell(2).innerHTML="Rs. "+b.toFixed(2);document.getElementById("month").value="";document.getElementById("units").value="";document.getElementById("month").focus()}function predictBill(){if(records.length<3){document.getElementById("result").innerHTML="Enter at least 3 monthly records.";return}let n=records.length;let avg=Math.floor((records[n-1].units+records[n-2].units+records[n-3].units)/3);let bill=calculateBill(avg);let tip="Excellent! Low electricity usage.";if(avg>200)tip="Reduce AC and heater usage.";else if(avg>100)tip="Use LED bulbs to save energy.";document.getElementById("result").innerHTML="<h3>Prediction Result</h3><p><b>Predicted Units:</b> "+avg+"</p><p><b>Estimated Bill:</b> Rs. "+bill.toFixed(2)+"</p><p><b>Suggestion:</b> "+tip+"</p>"}
+</script>
+</body>
+</html>
