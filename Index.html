@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smart Electricity Bill Predictor</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f4f7fb;
+            margin: 0;
+            padding: 20px;
+            color: #222;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: auto;
+        }
+
+        .card {
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 3px 12px #ccc;
+            margin-bottom: 20px;
+        }
+
+        h1 {
+            text-align: center;
+        }
+
+        input, button {
+            padding: 10px;
+            margin: 5px;
+            border-radius: 6px;
+            border: 1px solid #bbb;
+        }
+
+        button {
+            cursor: pointer;
+            background: #222;
+            color: white;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+        }
+
+        th, td {
+            border: 1px solid #ddd;
+            padding: 10px;
+            text-align: center;
+        }
+
+        .result {
+            background: #eef6ff;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 15px;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <div class="card">
+        <h1>Smart Electricity Bill Predictor</h1>
+
+        <h3>Add Monthly Record</h3>
+
+        <input type="text" id="month" placeholder="Enter Month">
+
+        <input type="number" id="units"
+               placeholder="Units Consumed">
+
+        <button onclick="addRecord()">
+            Add Record
+        </button>
+    </div>
+
+
+    <div class="card">
+
+        <h2>Bill History</h2>
+
+        <table>
+
+            <thead>
+                <tr>
+                    <th>Month</th>
+                    <th>Units</th>
+                    <th>Bill</th>
+                </tr>
+            </thead>
+
+            <tbody id="history">
+            </tbody>
+
+        </table>
+
+    </div>
+
+
+    <div class="card">
+
+        <h2>Predict Next Month Bill</h2>
+
+        <button onclick="predictBill()">
+            Predict Bill
+        </button>
+
+        <div id="result" class="result">
+            Enter at least 3 months of data.
+        </div>
+
+    </div>
+
+</div>
+
+
+<script>
+
+let records =
+    JSON.parse(localStorage.getItem("billRecords") || "[]");
+
+
+function calculateBill(units) {
+
+    let bill;
+
+    if (units <= 100) {
+
+        bill = units * 3;
+
+    } else if (units <= 200) {
+
+        bill = (100 * 3) +
+               (units - 100) * 5
